@@ -1,95 +1,102 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+import { AggregatedPart } from '../types';
+import { parseArrowData, parseTTIData } from './data';
 
-export default function Home() {
+
+export default async function Page() {
+  const parsedArrowDatas = await parseArrowData();
+  const parsedTTIDatas = await parseTTIData();
+  const electronicPartsData = [parsedArrowDatas, parsedTTIDatas];
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
-}
+    <div>
+      {electronicPartsData.map(apiData => {
+        return(apiData.map((data: AggregatedPart) => {
+          return (
+            <div>
+              <h3>Supplier: {data.sourceParts[0]}</h3>
+              <table className="outer-table">
+                <tbody>
+                  <tr>
+                    <td className='left-col'>Name</td>
+                    <td className='right-col'>{data.name}</td>
+                  </tr>
+                  <tr>
+                    <td className='left-col'>Description</td>
+                    <td className='right-col'>{data.description}</td>
+                  </tr>
+                  <tr>
+                    <td className='left-col'>TotalStock</td>
+                    <td className='right-col'>{data.totalStock}</td>
+                  </tr>
+                  <tr>
+                    <td className='left-col'>ManufacturerLeadTime</td>
+                    <td className='right-col'>{data.manufacturerLeadTime}</td>
+                  </tr>
+                  <tr>
+                    <td className='left-col'>ManufacturerName</td>
+                    <td className='right-col'>{data.manufacturerName}</td>
+                  </tr>
+                  <tr>
+                    <td className='left-col'>Packaging</td>
+                    <td className='right-col'>{data.packaging.map((packaging) => {
+                      return (
+                        <table className="inner-table">
+                          <tbody>
+                            <tr>
+                              <td>type</td>
+                              <td>minimumOrderQuantity</td>
+                              <td>quantityAvailable</td>
+                              <td>unitPrice</td>
+                              <td>supplier</td>
+                              <td>breakQuantity</td>
+                              <td>unitPrice</td>
+                              <td>totalPrice</td>
+                              <td>manufacturerLeadTime</td>
+                            </tr>
+                            <tr>
+                              <td>{packaging.type}</td>
+                              <td>{packaging.minimumOrderQuantity}</td>
+                              <td>{packaging.quantityAvailable}</td>
+                              <td>{packaging.unitPrice}</td>
+                              <td>{packaging.supplier}</td>
+                              <td>{packaging.priceBreaks.length > 0 ? packaging.priceBreaks[0].breakQuantity : undefined}</td>
+                              <td>{packaging.priceBreaks.length > 0 ? packaging.priceBreaks[0].unitPrice : undefined}</td>
+                              <td>{packaging.priceBreaks.length > 0 ? packaging.priceBreaks[0].totalPrice: undefined}</td>
+                              <td>{packaging.manufacturerLeadTime}</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      )
+                    })}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className='left-col'>ProductDoc</td>
+                    <td className='right-col'>{data.productDoc}</td>
+                  </tr>
+                  <tr>
+                    <td className='left-col'>ProductUrl</td>
+                    <td className='right-col'>{data.productUrl}</td>
+                  </tr>
+                  <tr>
+                    <td className='left-col'>ProductImageUrl</td>
+                    <td className='right-col'>{data.productImageUrl}</td>
+                  </tr>
+                  <tr>
+                    <td className='left-col'>Specifications</td>
+                    <td className='right-col'>{data.specifications.map((spec) => (JSON.stringify(spec)))}</td>
+                  </tr>
+                  <tr>
+                    <td className='left-col'>SourceParts</td>
+                    <td className='right-col'>{data.sourceParts[0]}</td>
+                  </tr>
+                  <tr>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          )
+        }))
+      })}    
+    </div>
+  );
+};
