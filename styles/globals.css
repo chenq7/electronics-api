@@ -1,0 +1,54 @@
+html, body {
+  background-color:whitesmoke;
+}
+
+h1, h2, h3 {
+  text-align: center;
+}
+
+h1 {
+  margin-bottom: 50px;
+}
+
+a {
+  padding: 5px;
+  border: 1px solid black;
+  border-collapse: collapse;
+  text-decoration: none;
+  color: black;
+}
+
+table, tbody {
+  width: 80%;
+  margin: auto;
+}
+
+td {
+  border: 1px solid black;
+  padding: 5px;
+  margin: 0;
+}
+
+
+.header-div {
+  margin: 30px;
+}
+
+.outer-table {
+  margin-bottom: 50px;
+  display: flex;
+  justify-content: center;
+  border-collapse: collapse;
+}
+
+.inner-table {
+  display: flex;
+  justify-content: center;
+  border-collapse: collapse;
+  margin: 20px;
+  font-size: 14px;
+}
+
+.right-col {
+  width: 100%;
+}
